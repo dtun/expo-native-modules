@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Image, View, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useMMKVString } from 'react-native-mmkv';
+import { hello } from '../modules/galaxies';
 
 function ImagePickerExample() {
   const [image, setImage] = useState<string | null>(null);
   const [name, setName] = useMMKVString('user.name');
-
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -22,6 +22,10 @@ function ImagePickerExample() {
       setImage(result.assets[0].uri);
     }
   };
+
+  useEffect(() => {
+    console.log(hello());
+  }, []);
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
