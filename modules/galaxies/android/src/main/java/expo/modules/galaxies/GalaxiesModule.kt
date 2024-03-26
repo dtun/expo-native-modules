@@ -18,7 +18,7 @@ class GalaxiesModule : Module() {
     Name("Galaxies")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("getDeviceModel") {
+    Function("getDeviceInfo") {
       val deviceModel = Build.MODEL ?: "Unknown"
       val appVersion = getPackageInfo()?.versionName ?: "Unknown"
 
