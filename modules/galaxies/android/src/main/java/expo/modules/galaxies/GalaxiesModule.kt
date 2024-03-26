@@ -10,8 +10,14 @@ class GalaxiesModule : Module() {
     Name("Galaxies")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
+    Function("getDeviceModel") {
+      val deviceModel = Build.MODEL ?: "Unknown"
+      val appVersion = getPackageInfo()?.versionName ?: "Unknown"
+
+      return @Function mapOf(
+        "deviceModel" to deviceModel,
+        "appVersion" to appVersion,
+      )
     }
 
   }

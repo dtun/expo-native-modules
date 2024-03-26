@@ -6,8 +6,11 @@ public class GalaxiesModule: Module {
     Name("Galaxies")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      return "Hello world! 👋"
+    Function("getDeviceInfo") { () -> [String: String] in
+      return [
+        "deviceModel": UIDevice.current.model,
+        "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+      ]
     }
 
   }

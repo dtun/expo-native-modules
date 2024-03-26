@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Image, View, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useMMKVString } from 'react-native-mmkv';
-import { hello } from '../modules/galaxies';
+import { getDeviceInfo } from '../modules/galaxies';
 
 function ImagePickerExample() {
+  const [deviceModel, setDeviceModel] = useState<string | null>(null);
+  const [appVersion, setAppVersion] = useState<string | null>(null);
   const [image, setImage] = useState<string | null>(null);
   const [name, setName] = useMMKVString('user.name');
   const pickImage = async () => {
@@ -24,7 +26,9 @@ function ImagePickerExample() {
   };
 
   useEffect(() => {
-    console.log(hello());
+    const { appVersion, deviceModel } = getDeviceInfo();
+    setAppVersion(appVersion);
+    setDeviceModel(deviceModel);
   }, []);
 
   return (
@@ -35,6 +39,8 @@ function ImagePickerExample() {
       )}
       <Text>{name}</Text>
       <Button title="Set name" onPress={() => setName('John Doe')} />
+      <Text>{deviceModel}</Text>
+      <Text>{appVersion}</Text>
     </View>
   );
 }

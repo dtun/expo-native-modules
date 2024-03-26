@@ -1,5 +1,5 @@
 import GalaxiesModule from './src/GalaxiesModule';
 
-export function hello(): string {
-  return GalaxiesModule.hello();
+export function getDeviceInfo(): { deviceModel: string; appVersion: string } {
+  return GalaxiesModule.getDeviceInfo();
 }
