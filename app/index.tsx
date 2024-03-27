@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Image, View, Text } from 'react-native';
+import { Button, Image, View, Text, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useMMKVString } from 'react-native-mmkv';
-import { getDeviceInfo } from '../modules/galaxies';
+import {
+  getDeviceInfo,
+  loadDummyUser,
+  addDataListener,
+} from '../modules/galaxies';
 
 function ImagePickerExample() {
   const [deviceModel, setDeviceModel] = useState<string | null>(null);
@@ -31,6 +35,17 @@ function ImagePickerExample() {
     setDeviceModel(deviceModel);
   }, []);
 
+  useEffect(() => {
+    const subscription = addDataListener((data: any) => {
+      console.log('Got data:', data);
+      Alert.alert('User loaded', `User: ${data.data.name}`);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
@@ -41,6 +56,7 @@ function ImagePickerExample() {
       <Button title="Set name" onPress={() => setName('John Doe')} />
       <Text>{deviceModel}</Text>
       <Text>{appVersion}</Text>
+      <Button title="Load dummy user" onPress={() => loadDummyUser()} />
     </View>
   );
 }

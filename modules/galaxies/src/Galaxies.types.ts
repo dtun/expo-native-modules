@@ -1,4 +1,4 @@
-export type ChangeEventPayload = {
+export type DataEventPayload = {
   value: string;
 };
 

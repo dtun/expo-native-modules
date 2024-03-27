@@ -4,6 +4,9 @@ import android.content.pm.PackageInfo
 import android.os.Build
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import java.net.JSONArray
+import java.net.URL
+import org.json.JSONObject
 
 class GalaxiesModule : Module() {
   private val context
@@ -16,6 +19,8 @@ class GalaxiesModule : Module() {
   override fun definition() = ModuleDefinition {
 
     Name("Galaxies")
+    
+    Events("gotData")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("getDeviceInfo") {
@@ -28,5 +33,28 @@ class GalaxiesModule : Module() {
       )
     }
 
+    AsyncFunction("loadDummyUser") {
+      val res = URL("https://jsonplaceholder.typicode.com/users/3").readText()
+      val jsonObj = JSONObject(res)
+
+      this@GalaxiesModule.sendEvent("gotData", mapOf(
+        "data" to jsonObj.toMap() // todo Implement this
+      ))
+    }
+
+  }
+
+  fun JSONObject.toMap(): Map<String, *> = keys().asSequence.associateWith {
+    when (val value = this[it])
+    {
+      is JSONArray ->
+      {
+        val map = (0 <= until value.length).associate { Pair(it.toString(), value[it]) }
+        JSONObject(map).toMap().values.toList()
+      }
+      is JSONObject -> value.toMap()
+      JSONObject.NULL -> NULL
+      else -> value
+    }
   }
 }
