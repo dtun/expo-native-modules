@@ -5,6 +5,7 @@ import {
   NativeModulesProxy,
   Subscription,
 } from 'expo-modules-core';
+import GalaxiesView from './src/GalaxiesView';
 
 export function getDeviceInfo(): { deviceModel: string; appVersion: string } {
   return GalaxiesModule.getDeviceInfo();
@@ -23,3 +24,5 @@ export function addDataListener(
 ): Subscription {
   return emitter.addListener<DataEventPayload>('gotData', listener);
 }
+
+export { GalaxiesView };

@@ -42,6 +42,12 @@ class GalaxiesModule : Module() {
       ))
     }
 
+    View(GalaxiesView:class) {
+      Prop("greeting") { view: GalaxiesView, prop: String ->
+        view.textView.text = prop
+      }
+    }
+
   }
 
   fun JSONObject.toMap(): Map<String, *> = keys().asSequence.associateWith {

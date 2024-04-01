@@ -6,6 +6,7 @@ import {
   getDeviceInfo,
   loadDummyUser,
   addDataListener,
+  GalaxiesView,
 } from '../modules/galaxies';
 
 function ImagePickerExample() {
@@ -57,6 +58,10 @@ function ImagePickerExample() {
       <Text>{deviceModel}</Text>
       <Text>{appVersion}</Text>
       <Button title="Load dummy user" onPress={() => loadDummyUser()} />
+      <GalaxiesView
+        greeting="with love from Galaxies"
+        style={{ height: 200, width: 200 }}
+      />
     </View>
   );
 }

@@ -39,6 +39,13 @@ public class GalaxiesModule: Module {
       }
       task.resume()
     }
-  
+
+    View(GalaxiesView.self){
+      Prop("greeting") {
+        (view: GalaxiesView, prop: String?) in
+        view.label.text = prop
+      }
+    }
+
   }
 }
