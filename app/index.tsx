@@ -7,6 +7,7 @@ import {
   loadDummyUser,
   addDataListener,
   GalaxiesView,
+  getApiKey,
 } from '../modules/galaxies';
 
 function ImagePickerExample() {
@@ -57,6 +58,7 @@ function ImagePickerExample() {
       <Button title="Set name" onPress={() => setName('John Doe')} />
       <Text>{deviceModel}</Text>
       <Text>{appVersion}</Text>
+      <Text>{getApiKey()}</Text>
       <Button title="Load dummy user" onPress={() => loadDummyUser()} />
       <GalaxiesView
         greeting="with love from Galaxies"

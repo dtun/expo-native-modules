@@ -5,7 +5,7 @@ import { GalaxiesViewProps } from './Galaxies.types';
 export default function GalaxiesView(props: GalaxiesViewProps) {
   return (
     <div>
-      <span>{props.name}</span>
+      <span>{props.greeting}</span>
     </div>
   );
 }

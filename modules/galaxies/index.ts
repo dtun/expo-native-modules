@@ -20,9 +20,13 @@ const emitter = new EventEmitter(
 );
 
 export function addDataListener(
-  listener: (data: DataEventPayload) => void
+  listener: (event: DataEventPayload) => void
 ): Subscription {
   return emitter.addListener<DataEventPayload>('gotData', listener);
 }
 
 export { GalaxiesView };
+
+export function getApiKey(): string {
+  return GalaxiesModule.getApiKey();
+}

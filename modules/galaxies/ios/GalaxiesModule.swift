@@ -1,50 +1,46 @@
 import ExpoModulesCore
 
 public class GalaxiesModule: Module {
-  public func definition() -> ModuleDefinition {
 
+  public func definition() -> ModuleDefinition {
+   
     Name("Galaxies")
 
     Events("gotData")
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("getDeviceInfo") { () -> [String: String] in
       return [
         "deviceModel": UIDevice.current.model,
-        "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
+        "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
       ]
     }
 
+    // Function that makes an HTTP call to get dummy data
     Function("loadDummyUser") { () -> Void in
-      let url = URL(string: "https://jsonplaceholder.typicode.com/users/3")!
-      print("Fetching user data from \(url)")
+      let url = URL(string: "https://jsonplaceholder.typicode.com/users/2")!
       let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        if let error = error {
-          print("Error fetching user data: \(error)")
-          return
-        }
-        guard let data = data else {
-          print("No data received")
-          return
-        }
+        guard let data = data else { return }
         do {
-          let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-          print("User data: \(json)")
+          let json = try JSONSerialization.jsonObject(with: data, options: [])
+          print(json)
           self.sendEvent("gotData", [
-            "data": json
+                "data": json
           ])
         } catch {
-          print("Error parsing user data: \(error)")
+          print(error)
         }
       }
       task.resume()
     }
 
-    View(GalaxiesView.self){
-      Prop("greeting") {
-        (view: GalaxiesView, prop: String?) in
-        view.label.text = prop
+    View(GalaxiesView.self) {
+      Prop("greeting") { (view: GalaxiesView, prop: String?) in
+          view.label.text = prop
       }
+    }
+
+    Function("getApiKey") { () -> String in
+     return Bundle.main.object(forInfoDictionaryKey: "GALACTIC_API_KEY") as! String
     }
 
   }

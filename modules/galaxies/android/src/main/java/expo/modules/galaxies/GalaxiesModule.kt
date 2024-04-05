@@ -1,12 +1,13 @@
 package expo.modules.galaxies
 
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.JSONArray
-import java.net.URL
+import org.json.JSONArray
 import org.json.JSONObject
+import java.net.URL
 
 class GalaxiesModule : Module() {
   private val context
@@ -19,48 +20,54 @@ class GalaxiesModule : Module() {
   override fun definition() = ModuleDefinition {
 
     Name("Galaxies")
-    
+
     Events("gotData")
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("getDeviceInfo") {
       val deviceModel = Build.MODEL ?: "Unknown"
       val appVersion = getPackageInfo()?.versionName ?: "Unknown"
 
-      return @Function mapOf(
+      return@Function mapOf(
         "deviceModel" to deviceModel,
-        "appVersion" to appVersion,
+        "appVersion" to appVersion
       )
     }
 
+    // Function that makes an HTTP call to get dummy data
     AsyncFunction("loadDummyUser") {
-      val res = URL("https://jsonplaceholder.typicode.com/users/3").readText()
-      val jsonObj = JSONObject(res)
+      val response = URL("https://jsonplaceholder.typicode.com/users/3").readText()
+      val jsonObject = JSONObject(response)
 
       this@GalaxiesModule.sendEvent("gotData", mapOf(
-        "data" to jsonObj.toMap() // todo Implement this
+        "data" to jsonObject.toMap()
       ))
     }
 
-    View(GalaxiesView:class) {
+    View(GalaxiesView::class) {
       Prop("greeting") { view: GalaxiesView, prop: String ->
         view.textView.text = prop
       }
     }
 
+
+    Function("getApiKey") {
+      val applicationInfo = appContext?.reactContext?.packageManager?.getApplicationInfo(appContext?.reactContext?.packageName.toString(), PackageManager.GET_META_DATA)
+      return@Function applicationInfo?.metaData?.getInt("GALACTIC_API_KEY")
+    }
   }
 
-  fun JSONObject.toMap(): Map<String, *> = keys().asSequence.associateWith {
+
+  fun JSONObject.toMap(): Map<String, *> = keys().asSequence().associateWith {
     when (val value = this[it])
     {
       is JSONArray ->
       {
-        val map = (0 <= until value.length).associate { Pair(it.toString(), value[it]) }
+        val map = (0 until value.length()).associate { Pair(it.toString(), value[it]) }
         JSONObject(map).toMap().values.toList()
       }
       is JSONObject -> value.toMap()
-      JSONObject.NULL -> NULL
-      else -> value
+      JSONObject.NULL -> null
+      else            -> value
     }
   }
 }
